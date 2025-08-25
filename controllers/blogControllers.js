@@ -1,13 +1,35 @@
 import blogModel from '../models/blogModel.js';
+import cloudinary from '../config/cloudinary.js';
 
-export const createBlog = async (req,res) => {
-    try{
-        console.log(req.file)
-       res.status(201).json({message:"Blog Created Successfully"}) 
-    }catch(err){
-        return res.status(500).json({message:"Server Error"});
+export const createBlog = async(req, res) => {
+
+    const { title, content } = req.body;
+    if (!title || !content || !req.file)
+        return res.status(400).json({
+            error: 'Title, content and image are required',
+            success: false
+        });
+
+    try {
+        const uploadedImage = await cloudinary.uploader.upload(req.file.path, {
+            folder: 'Blogs',
+        });
+
+        const blog = await Blog.create({
+            title,
+            content,
+            imageURL: uploadedImage.secure_url,
+            authorId: req.user.id,
+        });
+
+        res.status(201).json(blog);
+    } catch {
+        res.status(500).json({
+            error: 'Error while creating the blog',
+            success: false,
+        });
     }
-}
+};
 
 export const fetchAllBlogs = async (req, res) => {
   try {
