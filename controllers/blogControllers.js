@@ -15,7 +15,7 @@ export const createBlog = async(req, res) => {
             folder: 'Blogs',
         });
 
-        const blog = await Blog.create({
+        const blog = await blogModel.create({
             title,
             content,
             imageURL: uploadedImage.secure_url,
