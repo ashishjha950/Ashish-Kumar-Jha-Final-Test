@@ -4,6 +4,7 @@ dotenv.config();
 import dbConnect from './config/db.js';
 
 import userRoute from './routes/userRoute.js';
+import blogRoute from './routes/blogRoutes.js';
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.get('/',(req,res)=>{
 })
 
 app.use('/',userRoute);
+app.use('/',blogRoute);
 
 app.listen(PORT,()=>{
     console.log('Server started at ',PORT);
